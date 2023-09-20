@@ -4,4 +4,5 @@ use cpu::RAM;
 
 fn main() {
     let foo = W65C02S::new(RAM::new());
+    
 }
