@@ -29,15 +29,6 @@ pub struct W65C02S {
   X: u8,
   Y: u8,
 
-  /*
-  Processor Status Register
-  8-bit
-  The 8-bit Processor Status Register contains status flags and mode select bits. The Carry, Negative, Overflow,
-  and Zero status flags serve to report the status of ALU operations. These status flags are tested with conditional
-  branch instructions. The Decimal and IRQB disable are used as mode select flags. These flags are set by the program
-  to change Microprocessor operations. Bit 5 is available for a user status or mode bit.
-  */
-  P: u8,
 
   /*
   Program Counter Register
@@ -56,9 +47,12 @@ pub struct W65C02S {
   S: u8,
 
   /*
-  Process Status Register
+  Processor Status Register
   8-bit
-  For our purposes, this is broken down into the invidual values for clarity
+  The 8-bit Processor Status Register contains status flags and mode select bits. The Carry, Negative, Overflow,
+  and Zero status flags serve to report the status of ALU operations. These status flags are tested with conditional
+  branch instructions. The Decimal and IRQB disable are used as mode select flags. These flags are set by the program
+  to change Microprocessor operations. Bit 5 is available for a user status or mode bit.
   */
   //0
   P_C: bool,
@@ -223,5 +217,57 @@ pub struct W65C02S {
   the last interrupt sequence cycles, during which time the processor reads the interrupt vector. The VPB signal may be used to
   select and prioritize interrupts from several sources by modifying the vector addresses.
   */
-  VPB: bool
+  VPB: bool,
+
+  /*INTERNALS*/
+  memory: RAM
+}
+
+impl W65C02S {
+  pub fn new(mems: RAM) -> W65C02S{
+    W65C02S {
+      memory: mems,
+      IR: 0,
+      A: 0,
+      X: 0,
+      Y: 0,
+      PC: 0,
+      P_C: false,
+      P_Z: false,
+      P_I: false,
+      P_D: false,
+      P_B: false,
+      P_Ignore: true,
+      P_V: false,
+      P_N: false,
+      S: 0,
+      A_BUS: [false;16],
+      BE: false,
+      D_BUS: [false;8],
+      IRQB: false,
+      MLB: false,
+      NMIB: false,
+      PHI2: false,
+      PHI2O: false,
+      PHI1O: false,
+      RWB: false,
+      RDY: false,
+      RESB: false,
+      SOB: false,
+      SYNC: false,
+      VDD: false,
+      VSS: false,
+      VPB: false
+    }
+  }
+}
+
+pub struct RAM {
+  pub address: [u8; 65536]
+}
+
+impl RAM {
+  pub fn new() -> RAM {
+    RAM{address: [0;65536]}
+  }
 }
