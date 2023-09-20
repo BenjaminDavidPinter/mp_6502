@@ -1,3 +1,6 @@
+mod cpu;
+use cpu::W65C02S;
+
 fn main() {
-    println!("Hello, world!");
+    let foo: W65C02S;
 }
